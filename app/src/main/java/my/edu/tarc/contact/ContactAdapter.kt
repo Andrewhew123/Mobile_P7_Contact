@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import my.edu.tarc.contact.R
 
-class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
+class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() { //Adapter use to communicate between Database and Recycle View
     //Cached copy of contacts
     private var contactList = emptyList<Contact>()
 
@@ -16,19 +17,19 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ViewHolder>() {
         val textViewContact: TextView= view.findViewById(R.id.textViewContact)
     }
 
-    internal fun setContact(contact: List<Contact>){
+    internal fun setContact(contact: List<Contact>){ //Pass the data from the source to the adapter
         this.contactList = contact
-        notifyDataSetChanged()
+        notifyDataSetChanged() //Recycle will refresh recycle view
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //Create a new view, which define the UI of the list item
-        val view =  LayoutInflater.from(parent.context).inflate(R.layout.record, parent, false)
+        val view =  LayoutInflater.from(parent.context).inflate(R.layout.record, parent, false) //Card View
 
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) { //Pass the Adapter to Recycle View
         //Get element from the dataset at this position and replace the contents of the view with that element
         holder.textViewName.text = contactList[position].name
         holder.textViewContact.text = contactList[position].phone

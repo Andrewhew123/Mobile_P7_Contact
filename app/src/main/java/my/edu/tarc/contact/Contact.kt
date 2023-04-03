@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "contact")
-data class Contact (val name: String, @PrimaryKey val phone: String) {
+data class Contact (val name: String, @PrimaryKey val phone: String) { //Contact Table
     override fun toString(): String {
         return "$name : $phone"
     }
