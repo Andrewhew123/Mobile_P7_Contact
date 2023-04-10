@@ -2,6 +2,8 @@ package my.tarc.mycontact
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.ktx.database
 
 class ContactRepository(private val contactDao: ContactDao){
 
@@ -27,5 +29,19 @@ class ContactRepository(private val contactDao: ContactDao){
     @WorkerThread
     suspend fun update(contact: Contact){
         contactDao.getAllContact()
+    }
+
+    @WorkerThread
+    suspend fun uploadContacts(id: String){
+        //TODO: Sync local contact to the Cloud Database
+        if (allContacts.isInitialized) {
+            val database = Firebase.database("https://contact-c7ad7-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
+
+            if (!allContacts.value!!.isEmpty()) {
+                allContacts.value!!.forEach {
+                    database.child(id).child(it.phone).setValue(it)
+                }
+            }
+        }
     }
 }

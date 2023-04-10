@@ -14,4 +14,6 @@
     <string name="no_record">No record</string>
     <string name="upload_error">Error uploading profile</string>
     <string name="upload">Upload</string>
+    <string name="error_upload">Error uploading contact</string>
+    <string name="success_upload">Contact uploaded</string>
 </resources>

@@ -1,5 +1,6 @@
 package my.edu.tarc.contact
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -9,6 +10,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
@@ -86,7 +88,25 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_settings)
                 true
             }
+            R.id.action_upload -> {
+                //Upload Function
+                uploadContacts()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun uploadContacts() {
+        val sharedPreferences = this.getPreferences(Context.MODE_PRIVATE)
+        val id = sharedPreferences.getString(getString(R.string.phone), "")
+
+        if (id.isNullOrEmpty()) {
+            Toast.makeText(this, getString(R.string.error_upload), Toast.LENGTH_SHORT).show()
+        }else {
+            //Call the ViewModel according to ID
+            contactViewModel.uploadContact(id)
+            Toast.makeText(this, getString(R.string.success_upload), Toast.LENGTH_SHORT).show()
         }
     }
 
