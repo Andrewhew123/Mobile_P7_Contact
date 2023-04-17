@@ -45,10 +45,21 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener{
                 _,destination,_->
-            if(destination.id==R.id.nav_settings || destination.id == R.id.nav_second)
+            if(destination.id==R.id.nav_settings)
             {
+                title = getString(R.string.action_settings)
                 binding.fab.visibility = View.INVISIBLE
-            }else{
+
+            }else if (destination.id == R.id.nav_second) {
+                if (contactViewModel.selectedIndex == -1) {
+                    title = getString(R.string.add)
+                }else{
+                    title = getString(R.string.edit)
+                }
+                binding.fab.visibility = View.INVISIBLE
+            }
+            else{
+                title = getString(R.string.app_name)
                 binding.fab.visibility = View.VISIBLE
             }
         }

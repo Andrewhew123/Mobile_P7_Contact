@@ -1,5 +1,6 @@
 package my.edu.tarc.contact
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -44,32 +45,76 @@ class SecondFragment : Fragment(), MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //Determine the mode of the fragment; Add or Edit
+        if(myContactViewModel.selectedIndex != -1) { //Edit Mode
+
+            if (myContactViewModel.contactList.isInitialized) {
+                val contact: Contact = myContactViewModel.contactList.value!!.get(myContactViewModel.selectedIndex)
+                with(binding) {
+                    editTextName.setText(contact.name)
+                    editTextPhone.setText(contact.phone)
+                    editTextPhone.isEnabled = false
+                    editTextName.requestFocus()//Set focus
+                }
+            }
+        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        myContactViewModel.selectedIndex = -1
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menu.clear()
         menuInflater.inflate(R.menu.second_menu, menu)
-        menu.findItem(R.id.action_settings).isVisible = false
+
+        //menu.findItem(R.id.action_settings).isVisible = false
+
+        if(myContactViewModel.selectedIndex == -1) {
+            menu.findItem(R.id.action_delete).isVisible = false
+        }
+
+
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        if(menuItem.itemId == R.id.action_save){
+        if(menuItem.itemId == R.id.action_save){ //Save Item
 
-            //Add new item
-            binding.apply {
-                val name = editTextName.text.toString()
-                val phone = editTextPhone.text.toString()
-                val newContact = Contact(name, phone)
+            val name = binding.editTextName.text.toString()
+            val phone = binding.editTextPhone.text.toString()
+            val newContact = Contact(name, phone)
+
+            if(myContactViewModel.selectedIndex != -1) { //Update item
+                myContactViewModel.updateContact(newContact)
+            }else{ //Add item
                 myContactViewModel.addContact(newContact)
             }
 
-
             Toast.makeText(context, getString(R.string.contact_saved), Toast.LENGTH_SHORT).show()
-        }else if(menuItem.itemId == android.R.id.home){
+
+        }
+        else if (menuItem.itemId == R.id.action_delete) { //Delete item
+            val deleteAlertDialog = AlertDialog.Builder(requireActivity())
+            deleteAlertDialog.setMessage(R.string.delete_record)
+            deleteAlertDialog.setPositiveButton(
+                getString(R.string.delete), {_, _ ->
+                    val name = binding.editTextName.text.toString()
+                    val phone = binding.editTextPhone.text.toString()
+                    val newContact = Contact(name, phone)
+                    myContactViewModel.deleteContact(newContact)
+                    findNavController().navigateUp()
+            })
+            deleteAlertDialog.setNegativeButton(
+                getString(android.R.string.cancel), {_, _ ->
+                    //DO NOTHING
+                }
+            ).create().show()
+        }
+        else if(menuItem.itemId == android.R.id.home){
             findNavController().navigateUp()
         }
         return true

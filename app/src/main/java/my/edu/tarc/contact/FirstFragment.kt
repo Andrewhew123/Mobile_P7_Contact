@@ -12,11 +12,12 @@ import androidx.navigation.fragment.findNavController
 import my.edu.tarc.contact.databinding.FragmentFirstBinding
 import my.tarc.mycontact.ContactAdapter
 import my.tarc.mycontact.ContactViewModel
+import my.tarc.mycontact.RecordClickListener
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class FirstFragment : Fragment(), RecordClickListener {
 
     private var _binding: FragmentFirstBinding? = null
 
@@ -41,18 +42,19 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //Create an instance of Adapter
-        val adapter = ContactAdapter()
+        val adapter = ContactAdapter(this)
 
         //Insert an observer
         myContactViewModel.contactList.observe(
             viewLifecycleOwner,
             Observer {
                 if (it.isEmpty()){
+                    binding.textViewCount.isVisible = true
                     binding.textViewCount.text = getString(R.string.no_record) //There is no contact record from Database
                 }else{
                     binding.textViewCount.isVisible = false
-                    adapter.setContact(it)
                 }
+                adapter.setContact(it)
             }
         )
         binding.recyclerView.adapter = adapter
@@ -62,4 +64,15 @@ class FirstFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onRecordClickListener(index: Int) {
+        myContactViewModel.selectedIndex = index
+
+        //Navigate to the Second Fragment
+        findNavController().navigate(R.id.nav_second)
+
+
+    }
+
+
 }

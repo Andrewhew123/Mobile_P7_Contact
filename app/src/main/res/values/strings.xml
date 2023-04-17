@@ -16,4 +16,7 @@
     <string name="upload">Upload</string>
     <string name="error_upload">Error uploading contact</string>
     <string name="success_upload">Contact uploaded</string>
+    <string name="delete">delete</string>
+    <string name="delete_record">Successfully delete</string>
+    <string name="edit">edit</string>
 </resources>

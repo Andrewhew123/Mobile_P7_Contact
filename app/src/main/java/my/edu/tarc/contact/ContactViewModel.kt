@@ -11,8 +11,10 @@ class ContactViewModel (application: Application): AndroidViewModel(application)
 
     //Live Data and Repository connected
 
-    var contactList : LiveData<List<Contact>>
+    var contactList : LiveData<List<Contact>> //Storing the data that is representing in the recycle view
     private val repository: ContactRepository
+    var selectedIndex: Int = -1
+
 
     //ViewModel, LifeCycle, Repository
 
@@ -35,5 +37,9 @@ class ContactViewModel (application: Application): AndroidViewModel(application)
 
     fun uploadContact(id: String) = viewModelScope.launch {
         repository.uploadContacts(id)
+    }
+
+    fun deleteContact(contact: Contact) = viewModelScope.launch {
+        repository.delete(contact)
     }
 }

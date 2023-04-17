@@ -28,7 +28,7 @@ class ContactRepository(private val contactDao: ContactDao){
 
     @WorkerThread
     suspend fun update(contact: Contact){
-        contactDao.getAllContact()
+        contactDao.update(contact)
     }
 
     @WorkerThread
